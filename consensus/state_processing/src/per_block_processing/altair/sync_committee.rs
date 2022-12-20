@@ -52,8 +52,8 @@ pub fn process_sync_aggregate<T: EthSpec>(
         .zip(aggregate.sync_committee_bits.iter())
     {
         if participation_bit {
-            increase_balance(state, participant_index, participant_reward)?;
-            increase_balance(state, proposer_index as usize, proposer_reward)?;
+            increase_balance(state, participant_index, participant_reward, spec, true)?;
+            increase_balance(state, proposer_index as usize, proposer_reward, spec, true)?;
         } else {
             decrease_balance(state, participant_index, participant_reward)?;
         }

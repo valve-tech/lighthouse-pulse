@@ -66,11 +66,14 @@ pub fn slash_validator<T: EthSpec>(
         return Err(BeaconStateError::UnknownValidator(whistleblower_index).into());
     }
 
-    increase_balance(state, proposer_index, proposer_reward)?;
+    // Do not apply burn to slashing rewards.
+    increase_balance(state, proposer_index, proposer_reward, spec, false)?;
     increase_balance(
         state,
         whistleblower_index,
         whistleblower_reward.safe_sub(proposer_reward)?,
+        spec,
+        false,
     )?;
 
     Ok(())
