@@ -65,7 +65,7 @@ pub fn process_rewards_and_penalties<T: EthSpec>(
     // instead).
     for (i, delta) in deltas.into_iter().enumerate() {
         let combined_delta = delta.flatten()?;
-        increase_balance(state, i, combined_delta.rewards as u64)?;
+        increase_balance(state, i, combined_delta.rewards as u64, spec, true)?;
         decrease_balance(state, i, combined_delta.penalties as u64)?;
     }
 

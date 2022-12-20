@@ -3,6 +3,7 @@ mod get_attestation_participation;
 mod get_attesting_indices;
 mod get_indexed_attestation;
 mod initiate_validator_exit;
+mod pulse;
 mod slash_validator;
 
 pub mod altair;
@@ -17,14 +18,19 @@ pub use initiate_validator_exit::initiate_validator_exit;
 pub use slash_validator::slash_validator;
 
 use safe_arith::SafeArith;
-use types::{BeaconState, BeaconStateError, EthSpec};
+use types::{BeaconState, BeaconStateError, ChainSpec, EthSpec};
 
 /// Increase the balance of a validator, upon overflow set the balance to u64 MAX.
 pub fn increase_balance<E: EthSpec>(
     state: &mut BeaconState<E>,
     index: usize,
-    delta: u64,
+    mut delta: u64,
+    spec: &ChainSpec,
+    apply_burn: bool,
 ) -> Result<(), BeaconStateError> {
+    if apply_burn {
+        delta = pulse::apply_burn(delta, spec)
+    }
     let balance = state.get_balance_mut(index)?;
     if let Err(_) = balance.safe_add_assign(delta) {
         *balance = u64::MAX;
