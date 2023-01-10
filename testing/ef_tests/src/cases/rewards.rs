@@ -22,9 +22,9 @@ use types::{
 #[derive(Debug, Clone, PartialEq, Decode, Encode, CompareFields)]
 pub struct Deltas {
     #[compare_fields(as_slice)]
-    rewards: Vec<u64>,
+    rewards: Vec<u128>,
     #[compare_fields(as_slice)]
-    penalties: Vec<u64>,
+    penalties: Vec<u128>,
 }
 
 // Define "legacy" implementations of `Option<Epoch>`, `Option<NonZeroUsize>` which use four bytes
@@ -185,7 +185,7 @@ fn convert_base_deltas(attestation_deltas: &[AttestationDelta], accessor: Access
 fn compute_altair_flag_deltas<E: EthSpec>(
     state: &BeaconState<E>,
     flag_index: usize,
-    total_active_balance: u64,
+    total_active_balance: u128,
     spec: &ChainSpec,
 ) -> Result<Deltas, EpochProcessingError> {
     let mut deltas = vec![Delta::default(); state.validators().len()];

@@ -19,13 +19,16 @@ pub use slash_validator::slash_validator;
 use safe_arith::SafeArith;
 use types::{BeaconState, BeaconStateError, EthSpec};
 
-/// Increase the balance of a validator, erroring upon overflow, as per the spec.
+/// Increase the balance of a validator, upon overflow set the balance to u64 MAX.
 pub fn increase_balance<E: EthSpec>(
     state: &mut BeaconState<E>,
     index: usize,
     delta: u64,
 ) -> Result<(), BeaconStateError> {
-    state.get_balance_mut(index)?.safe_add_assign(delta)?;
+    let balance = state.get_balance_mut(index)?;
+    if let Err(_) = balance.safe_add_assign(delta) {
+        *balance = u64::MAX;
+    }
     Ok(())
 }
 

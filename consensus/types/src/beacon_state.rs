@@ -318,7 +318,7 @@ where
     #[tree_hash(skip_hashing)]
     #[test_random(default)]
     #[derivative(Clone(clone_with = "clone_default"))]
-    pub total_active_balance: Option<(Epoch, u64)>,
+    pub total_active_balance: Option<(Epoch, u128)>,
     #[serde(skip_serializing, skip_deserializing)]
     #[ssz(skip_serializing, skip_deserializing)]
     #[tree_hash(skip_hashing)]
@@ -693,11 +693,11 @@ impl<T: EthSpec> BeaconState<T> {
                 .get(shuffled_index)
                 .ok_or(Error::ShuffleIndexOutOfBounds(shuffled_index))?;
             let random_byte = Self::shuffling_random_byte(i, seed)?;
-            let effective_balance = self.get_effective_balance(candidate_index)?;
-            if effective_balance.safe_mul(MAX_RANDOM_BYTE)?
-                >= spec
-                    .max_effective_balance
-                    .safe_mul(u64::from(random_byte))?
+            let effective_balance = self.get_effective_balance(candidate_index)? as u128;
+            if effective_balance.safe_mul(MAX_RANDOM_BYTE as u128)?
+                >= (spec
+                    .max_effective_balance as u128)
+                    .safe_mul(u64::from(random_byte) as u128)?
             {
                 return Ok(candidate_index);
             }
@@ -879,11 +879,11 @@ impl<T: EthSpec> BeaconState<T> {
                 .get(shuffled_index)
                 .ok_or(Error::ShuffleIndexOutOfBounds(shuffled_index))?;
             let random_byte = Self::shuffling_random_byte(i, seed.as_bytes())?;
-            let effective_balance = self.get_validator(candidate_index)?.effective_balance;
-            if effective_balance.safe_mul(MAX_RANDOM_BYTE)?
-                >= spec
-                    .max_effective_balance
-                    .safe_mul(u64::from(random_byte))?
+            let effective_balance = self.get_validator(candidate_index)?.effective_balance as u128;
+            if effective_balance.safe_mul(MAX_RANDOM_BYTE as u128)?
+                >= (spec
+                    .max_effective_balance as u128)
+                    .safe_mul(u64::from(random_byte) as u128)?
             {
                 sync_committee_indices.push(candidate_index);
             }
@@ -1321,14 +1321,14 @@ impl<T: EthSpec> BeaconState<T> {
         &'a self,
         validator_indices: I,
         spec: &ChainSpec,
-    ) -> Result<u64, Error> {
-        let total_balance = validator_indices.into_iter().try_fold(0_u64, |acc, i| {
+    ) -> Result<u128, Error> {
+        let total_balance = validator_indices.into_iter().try_fold(0_u128, |acc, i| {
             self.get_effective_balance(*i)
-                .and_then(|bal| Ok(acc.safe_add(bal)?))
+                .and_then(|bal| Ok(acc.safe_add(bal as u128)?))
         })?;
         Ok(std::cmp::max(
             total_balance,
-            spec.effective_balance_increment,
+            spec.effective_balance_increment as u128,
         ))
     }
 
@@ -1338,7 +1338,7 @@ impl<T: EthSpec> BeaconState<T> {
     /// the current committee cache is.
     ///
     /// Returns minimum `EFFECTIVE_BALANCE_INCREMENT`, to avoid div by 0.
-    pub fn get_total_active_balance(&self) -> Result<u64, Error> {
+    pub fn get_total_active_balance(&self) -> Result<u128, Error> {
         let (initialized_epoch, balance) = self
             .total_active_balance()
             .ok_or(Error::TotalActiveBalanceCacheUninitialized)?;

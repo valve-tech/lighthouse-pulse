@@ -23,21 +23,21 @@ impl<T: EthSpec> EpochProcessingSummary<T> {
     /// Updates some Prometheus metrics with some values in `self`.
     #[cfg(feature = "metrics")]
     pub fn observe_metrics(&self) -> Result<(), ParticipationCacheError> {
-        metrics::set_gauge(
+        metrics::set_float_gauge(
             &metrics::PARTICIPATION_PREV_EPOCH_HEAD_ATTESTING_GWEI_TOTAL,
-            self.previous_epoch_head_attesting_balance()? as i64,
+            self.previous_epoch_head_attesting_balance()? as f64,
         );
-        metrics::set_gauge(
+        metrics::set_float_gauge(
             &metrics::PARTICIPATION_PREV_EPOCH_TARGET_ATTESTING_GWEI_TOTAL,
-            self.previous_epoch_target_attesting_balance()? as i64,
+            self.previous_epoch_target_attesting_balance()? as f64,
         );
-        metrics::set_gauge(
+        metrics::set_float_gauge(
             &metrics::PARTICIPATION_PREV_EPOCH_SOURCE_ATTESTING_GWEI_TOTAL,
-            self.previous_epoch_source_attesting_balance()? as i64,
+            self.previous_epoch_source_attesting_balance()? as f64,
         );
-        metrics::set_gauge(
+        metrics::set_float_gauge(
             &metrics::PARTICIPATION_PREV_EPOCH_ACTIVE_GWEI_TOTAL,
-            self.previous_epoch_total_active_balance() as i64,
+            self.previous_epoch_total_active_balance() as f64,
         );
 
         Ok(())
@@ -52,7 +52,7 @@ impl<T: EthSpec> EpochProcessingSummary<T> {
     }
 
     /// Returns the sum of the effective balance of all validators in the current epoch.
-    pub fn current_epoch_total_active_balance(&self) -> u64 {
+    pub fn current_epoch_total_active_balance(&self) -> u128 {
         match self {
             EpochProcessingSummary::Base { total_balances, .. } => total_balances.current_epoch(),
             EpochProcessingSummary::Altair {
@@ -64,7 +64,7 @@ impl<T: EthSpec> EpochProcessingSummary<T> {
 
     /// Returns the sum of the effective balance of all validators in the current epoch who
     /// included an attestation that matched the target.
-    pub fn current_epoch_target_attesting_balance(&self) -> Result<u64, ParticipationCacheError> {
+    pub fn current_epoch_target_attesting_balance(&self) -> Result<u128, ParticipationCacheError> {
         match self {
             EpochProcessingSummary::Base { total_balances, .. } => {
                 Ok(total_balances.current_epoch_target_attesters())
@@ -77,7 +77,7 @@ impl<T: EthSpec> EpochProcessingSummary<T> {
     }
 
     /// Returns the sum of the effective balance of all validators in the previous epoch.
-    pub fn previous_epoch_total_active_balance(&self) -> u64 {
+    pub fn previous_epoch_total_active_balance(&self) -> u128 {
         match self {
             EpochProcessingSummary::Base { total_balances, .. } => total_balances.previous_epoch(),
             EpochProcessingSummary::Altair {
@@ -140,7 +140,7 @@ impl<T: EthSpec> EpochProcessingSummary<T> {
 
     /// Returns the sum of the effective balance of all validators in the previous epoch who
     /// included an attestation that matched the target.
-    pub fn previous_epoch_target_attesting_balance(&self) -> Result<u64, ParticipationCacheError> {
+    pub fn previous_epoch_target_attesting_balance(&self) -> Result<u128, ParticipationCacheError> {
         match self {
             EpochProcessingSummary::Base { total_balances, .. } => {
                 Ok(total_balances.previous_epoch_target_attesters())
@@ -159,7 +159,7 @@ impl<T: EthSpec> EpochProcessingSummary<T> {
     ///
     /// - Base: any attestation can match the head.
     /// - Altair: only "timely" attestations can match the head.
-    pub fn previous_epoch_head_attesting_balance(&self) -> Result<u64, ParticipationCacheError> {
+    pub fn previous_epoch_head_attesting_balance(&self) -> Result<u128, ParticipationCacheError> {
         match self {
             EpochProcessingSummary::Base { total_balances, .. } => {
                 Ok(total_balances.previous_epoch_head_attesters())
@@ -178,7 +178,7 @@ impl<T: EthSpec> EpochProcessingSummary<T> {
     ///
     /// - Base: any attestation can match the source.
     /// - Altair: only "timely" attestations can match the source.
-    pub fn previous_epoch_source_attesting_balance(&self) -> Result<u64, ParticipationCacheError> {
+    pub fn previous_epoch_source_attesting_balance(&self) -> Result<u128, ParticipationCacheError> {
         match self {
             EpochProcessingSummary::Base { total_balances, .. } => {
                 Ok(total_balances.previous_epoch_attesters())

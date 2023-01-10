@@ -60,13 +60,13 @@ impl<T: BeaconChainTypes> BeaconChain<T> {
                     .total_balance()
                     .map_err(|_| BeaconChainError::AttestationRewardsError)?;
 
-            let unslashed_participating_increments =
-                unslashed_participating_balance.safe_div(spec.effective_balance_increment)?;
+            let unslashed_participating_increments = unslashed_participating_balance
+                .safe_div(spec.effective_balance_increment as u128)?;
 
             let total_active_balance = participation_cache.current_epoch_total_active_balance();
 
             let active_increments =
-                total_active_balance.safe_div(spec.effective_balance_increment)?;
+                total_active_balance.safe_div(spec.effective_balance_increment as u128)?;
 
             let base_reward_per_increment =
                 BaseRewardPerIncrement::new(total_active_balance, spec)?;
@@ -81,10 +81,10 @@ impl<T: BeaconChainTypes> BeaconChain<T> {
 
                 let reward_numerator = base_reward
                     .safe_mul(weight)?
-                    .safe_mul(unslashed_participating_increments)?;
+                    .safe_mul(unslashed_participating_increments as u64)?;
 
                 let ideal_reward = reward_numerator
-                    .safe_div(active_increments)?
+                    .safe_div(active_increments as u64)?
                     .safe_div(WEIGHT_DENOMINATOR)?;
                 if !state.is_in_inactivity_leak(previous_epoch, spec) {
                     ideal_rewards_hashmap

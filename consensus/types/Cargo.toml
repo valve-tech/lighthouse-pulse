@@ -22,12 +22,12 @@ log = "0.4.11"
 rayon = "1.4.1"
 rand = "0.8.5"
 safe_arith = { path = "../safe_arith" }
-serde = {version = "1.0.116" , features = ["rc"] }
+serde = {version = "1.0.116", features = ["rc"] }
 serde_derive = "1.0.116"
 slog = "2.5.2"
-ethereum_ssz = { version = "0.5.0", features = ["arbitrary"] }
-ethereum_ssz_derive = "0.5.0"
-ssz_types = { version = "0.5.3", features = ["arbitrary"] }
+ethereum_ssz = { path = "../../../ethereum_ssz/ssz", features = ["arbitrary"] }
+ethereum_ssz_derive= { path = "../../../ethereum_ssz/ssz_derive" }
+ssz_types = { path = "../../../ssz_types", features = ["arbitrary"] }
 swap_or_not_shuffle = { path = "../swap_or_not_shuffle", features = ["arbitrary"] }
 test_random_derive = { path = "../../common/test_random_derive" }
 tree_hash = { version = "0.5.0", features = ["arbitrary"] }

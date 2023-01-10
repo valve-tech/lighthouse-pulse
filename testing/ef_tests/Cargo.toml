@@ -22,8 +22,8 @@ serde = "1.0.116"
 serde_derive = "1.0.116"
 serde_repr = "0.1.6"
 serde_yaml = "0.8.13"
-ethereum_ssz = "0.5.0"
-ethereum_ssz_derive = "0.5.0"
+ethereum_ssz = { path = "../../../ethereum_ssz/ssz" }
+ethereum_ssz_derive= { path = "../../../ethereum_ssz/ssz_derive" }
 tree_hash = "0.5.0"
 tree_hash_derive = "0.5.0"
 cached_tree_hash = { path = "../../consensus/cached_tree_hash" }

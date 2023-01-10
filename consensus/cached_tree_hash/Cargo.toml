@@ -6,10 +6,10 @@ edition = "2021"
 
 [dependencies]
 ethereum-types = "0.14.1"
-ssz_types = "0.5.3"
+ssz_types = { path = "../../../ssz_types" }
 ethereum_hashing = "1.0.0-beta.2"
-ethereum_ssz_derive = "0.5.0"
-ethereum_ssz = "0.5.0"
+ethereum_ssz_derive= { path = "../../../ethereum_ssz/ssz_derive" }
+ethereum_ssz = { path = "../../../ethereum_ssz/ssz" }
 tree_hash = "0.5.0"
 smallvec = "1.6.1"
 

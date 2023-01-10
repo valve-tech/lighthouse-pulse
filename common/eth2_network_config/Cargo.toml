@@ -16,6 +16,6 @@ tempfile = "3.1.0"
 [dependencies]
 serde_yaml = "0.8.13"
 types = { path = "../../consensus/types"}
-ethereum_ssz = "0.5.0"
+ethereum_ssz = { path = "../../../ethereum_ssz/ssz" }
 eth2_config = { path = "../eth2_config"}
 discv5 = "0.3.0"

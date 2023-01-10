@@ -2544,8 +2544,6 @@ dependencies = [
 [[package]]
 name = "ethereum_ssz"
 version = "0.5.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "32749e96305376af40d7a7ee8ea4c4c64c68d09ff94a81ab78c8d9bc7153c221"
 dependencies = [
  "ethereum-types 0.14.1",
  "itertools",
@@ -2555,8 +2553,6 @@ dependencies = [
 [[package]]
 name = "ethereum_ssz_derive"
 version = "0.5.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d9cac7ef2107926cea34c0064056f9bb134d2085eef882388d151d2e59174cf0"
 dependencies = [
  "darling 0.13.4",
  "proc-macro2",
@@ -7863,8 +7859,6 @@ dependencies = [
 [[package]]
 name = "ssz_types"
 version = "0.5.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e43767964a80b2fdeda7a79a57a2b6cbca966688d5b81da8fe91140a94f552a1"
 dependencies = [
  "arbitrary",
  "derivative",
