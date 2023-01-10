@@ -36,7 +36,7 @@ use tree_hash::TreeHash;
 use types::application_domain::ApplicationDomain;
 use types::{
     AggregateSignature, BitList, Domain, EthSpec, ExecutionBlockHash, Hash256, Keypair,
-    MainnetEthSpec, RelativeEpoch, SelectionProof, SignedRoot, Slot,
+    MainnetEthSpec, RelativeEpoch, SelectionProof, SignedRoot, Slot, Uint256,
 };
 
 type E = MainnetEthSpec;
@@ -2225,7 +2225,7 @@ impl ApiTester {
                         .map(|parent| parent.root),
                     justified_epoch: node.justified_checkpoint.epoch,
                     finalized_epoch: node.finalized_checkpoint.epoch,
-                    weight: node.weight,
+                    weight: Uint256::from(node.weight),
                     validity: execution_status,
                     execution_block_hash: node
                         .execution_status

@@ -1270,7 +1270,7 @@ where
     }
 
     /// Returns the weight for the given block root.
-    pub fn get_block_weight(&self, block_root: &Hash256) -> Option<u64> {
+    pub fn get_block_weight(&self, block_root: &Hash256) -> Option<u128> {
         self.proto_array.get_weight(block_root)
     }
 
@@ -1606,9 +1606,9 @@ where
 fn check_progressive_balances<E, T>(
     state: &BeaconState<E>,
     participation_cache: &ParticipationCache,
-    cached_previous_target_balance: u64,
-    cached_current_target_balance: u64,
-    cached_total_active_balance: u64,
+    cached_previous_target_balance: u128,
+    cached_current_target_balance: u128,
+    cached_total_active_balance: u128,
 ) -> Result<(), Error<T::Error>>
 where
     E: EthSpec,

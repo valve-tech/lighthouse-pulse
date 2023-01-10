@@ -115,8 +115,8 @@ error-chain = "0.12"
 ethereum-types = "0.14"
 ethereum_hashing = "1.0.0-beta.2"
 ethereum_serde_utils = "0.5.2"
-ethereum_ssz = "0.5"
-ethereum_ssz_derive = "0.5"
+ethereum_ssz = { path = "../ethereum_ssz/ssz" }
+ethereum_ssz_derive = { path = "../ethereum_ssz/ssz_derive" }
 ethers-core = "1"
 ethers-providers = { version = "1", default-features = false }
 exit-future = "0.2"
@@ -155,7 +155,7 @@ slog-term = "2"
 sloggers = { version = "2", features = ["json"] }
 smallvec = "1.11.2"
 snap = "1"
-ssz_types = "0.5"
+ssz_types = { path = "../ssz_types" }
 strum = { version = "0.24", features = ["derive"] }
 superstruct = "0.6"
 syn = "1"

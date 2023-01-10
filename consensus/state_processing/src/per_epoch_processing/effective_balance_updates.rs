@@ -13,22 +13,22 @@ pub fn process_effective_balance_updates<T: EthSpec>(
     let hysteresis_increment = spec
         .effective_balance_increment
         .safe_div(spec.hysteresis_quotient)?;
-    let downward_threshold = hysteresis_increment.safe_mul(spec.hysteresis_downward_multiplier)?;
-    let upward_threshold = hysteresis_increment.safe_mul(spec.hysteresis_upward_multiplier)?;
+    let downward_threshold = hysteresis_increment.safe_mul(spec.hysteresis_downward_multiplier)? as u128;
+    let upward_threshold = hysteresis_increment.safe_mul(spec.hysteresis_upward_multiplier)? as u128;
     let (validators, balances, progressive_balances_cache) =
         state.validators_and_balances_and_progressive_balances_mut();
     for (index, validator) in validators.iter_mut().enumerate() {
         let balance = balances
             .get(index)
             .copied()
-            .ok_or(BeaconStateError::BalancesOutOfBounds(index))?;
+            .ok_or(BeaconStateError::BalancesOutOfBounds(index))? as u128;
 
-        if balance.safe_add(downward_threshold)? < validator.effective_balance
-            || validator.effective_balance.safe_add(upward_threshold)? < balance
+        if (balance).safe_add(downward_threshold)? < validator.effective_balance as u128
+            || (validator.effective_balance as u128).safe_add(upward_threshold)? < balance
         {
             let old_effective_balance = validator.effective_balance;
             let new_effective_balance = std::cmp::min(
-                balance.safe_sub(balance.safe_rem(spec.effective_balance_increment)?)?,
+                balance.safe_sub(balance.safe_rem(spec.effective_balance_increment as u128)?)? as u64,
                 spec.max_effective_balance,
             );
 

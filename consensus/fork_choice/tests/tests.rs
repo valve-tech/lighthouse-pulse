@@ -431,7 +431,7 @@ impl ForkChoiceTest {
         );
         assert_eq!(
             balances.iter().sum::<u64>(),
-            fc.fc_store().justified_balances().total_effective_balance
+            fc.fc_store().justified_balances().total_effective_balance as u64
         );
     }
 
