@@ -246,6 +246,17 @@ define_hardcoded_nets!(
         // directory.
         GENESIS_STATE_IS_KNOWN
     ),
+    // TODO
+    // (
+    //     // Network name (must be unique among all networks).
+    //     pulsechain,
+    //     // The name of the directory in the `eth2_network_config/built_in_network_configs`
+    //     // directory where the configuration files are located for this network.
+    //     "pulsechain",
+    //     // Set to `true` if the genesis state can be found in the `built_in_network_configs`
+    //     // directory.
+    //     false // GENESIS_STATE_IS_NOT_KNOWN
+    // ),
     (
         // Network name (must be unique among all networks).
         prater,
@@ -277,6 +288,16 @@ define_hardcoded_nets!(
         // Set to `true` if the genesis state can be found in the `built_in_network_configs`
         // directory.
         GENESIS_STATE_IS_KNOWN
+    ),
+    (
+        // Network name (must be unique among all networks).
+        pulsechain_testnet,
+        // The name of the directory in the `eth2_network_config/built_in_network_configs`
+        // directory where the configuration files are located for this network.
+        "pulsechain_testnet",
+        // Set to `true` if the genesis state can be found in the `built_in_network_configs`
+        // directory.
+        false // GENESIS_STATE_IS_NOT_KNOWN
     ),
     (
         // Network name (must be unique among all networks).
