@@ -47,18 +47,19 @@ pub fn process_sync_aggregate<T: EthSpec>(
     // Apply participant and proposer rewards
     let committee_indices = state.get_sync_committee_indices(&current_sync_committee)?;
 
+    let mut earned_proposer_reward = 0;
     for (participant_index, participation_bit) in committee_indices
         .into_iter()
         .zip(aggregate.sync_committee_bits.iter())
     {
         if participation_bit {
             increase_balance(state, participant_index, participant_reward, spec, true)?;
-            increase_balance(state, proposer_index as usize, proposer_reward, spec, true)?;
+            earned_proposer_reward += proposer_reward;
         } else {
             decrease_balance(state, participant_index, participant_reward)?;
         }
     }
-
+    increase_balance(state, proposer_index as usize, earned_proposer_reward, spec, true)?;
     Ok(())
 }
 
