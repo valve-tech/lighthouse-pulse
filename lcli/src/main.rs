@@ -851,6 +851,7 @@ fn main() {
             EthSpecId::Minimal => run(EnvironmentBuilder::minimal(), &matches),
             EthSpecId::Mainnet => run(EnvironmentBuilder::mainnet(), &matches),
             EthSpecId::Gnosis => run(EnvironmentBuilder::gnosis(), &matches),
+            EthSpecId::PulseChain => run(EnvironmentBuilder::pulsechain(), &matches),
         });
 
     match result {

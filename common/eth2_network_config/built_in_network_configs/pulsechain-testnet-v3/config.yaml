@@ -2,7 +2,7 @@
 
 # Extends the mainnet preset
 CONFIG_NAME: 'pulsechain-testnet-v3'
-PRESET_BASE: 'mainnet'
+PRESET_BASE: 'pulsechain'
 
 # Transition
 # ---------------------------------------------------------------
@@ -48,8 +48,6 @@ ETH1_FOLLOW_DISTANCE: 2048
 
 # Validator cycle
 # ---------------------------------------------------------------
-# 2**5 * 10**15 (= 32,000,000,000,000,000) Gwei
-MAX_EFFECTIVE_BALANCE: 32000000000000000
 # 2**2 (= 4)
 INACTIVITY_SCORE_BIAS: 4
 # 2**4 (= 16)

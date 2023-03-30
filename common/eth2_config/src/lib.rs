@@ -60,6 +60,13 @@ impl Eth2Config {
             spec: ChainSpec::gnosis(),
         }
     }
+
+    pub fn pulsechain() -> Self {
+        Self {
+            eth_spec_id: EthSpecId::PulseChain,
+            spec: ChainSpec::pulsechain(),
+        }
+    }
 }
 
 /// A directory that can be built by downloading files via HTTP.
@@ -283,7 +290,7 @@ define_hardcoded_nets!(
         pulsechain_testnet_v3,
         // The name of the directory in the `eth2_network_config/built_in_network_configs`
         // directory where the configuration files are located for this network.
-        "pulsechain_testnet_v3",
+        "pulsechain-testnet-v3",
         // Set to `true` if the genesis state can be found in the `built_in_network_configs`
         // directory.
         GENESIS_STATE_IS_KNOWN

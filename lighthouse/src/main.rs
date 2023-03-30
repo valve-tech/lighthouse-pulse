@@ -70,7 +70,7 @@ fn main() {
                  SHA256 hardware acceleration: {}\n\
                  Allocator: {}\n\
                  Profile: {}\n\
-                 Specs: mainnet (true), minimal ({}), gnosis ({})",
+                 Specs: mainnet (true), minimal ({}), gnosis ({}), pulsechain (true)",
                  VERSION.replace("Lighthouse/", ""),
                  bls_library_name(),
                  have_sha_extensions(),
@@ -377,6 +377,7 @@ fn main() {
 
         match eth_spec_id {
             EthSpecId::Mainnet => run(EnvironmentBuilder::mainnet(), &matches, eth2_network_config),
+            EthSpecId::PulseChain => run(EnvironmentBuilder::pulsechain(), &matches, eth2_network_config),
             #[cfg(feature = "gnosis")]
             EthSpecId::Gnosis => run(EnvironmentBuilder::gnosis(), &matches, eth2_network_config),
             #[cfg(feature = "spec-minimal")]
