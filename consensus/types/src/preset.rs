@@ -229,7 +229,7 @@ impl DenebPreset {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::{GnosisEthSpec, MainnetEthSpec, MinimalEthSpec};
+    use crate::{GnosisEthSpec, MainnetEthSpec, MinimalEthSpec, PulseChainEthSpec};
     use serde::de::DeserializeOwned;
     use std::env;
     use std::fs::File;
@@ -282,5 +282,10 @@ mod test {
     #[test]
     fn minimal_presets_consistent() {
         preset_test::<MinimalEthSpec>();
+    }
+
+    #[test]
+    fn pulsechain_presets_consistent() {
+        preset_test::<PulseChainEthSpec>();
     }
 }

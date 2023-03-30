@@ -996,6 +996,16 @@ impl ChainSpec {
             domain_bls_to_execution_change: 10,
         }
     }
+
+    /// PulseChain specification.
+    pub fn pulsechain() -> Self {
+        let mut spec = Self::mainnet();
+        spec.config_name = Some("pulsechain".to_string());
+        spec.max_effective_balance =
+            option_wrapper(|| u64::checked_pow(2, 5)?.checked_mul(u64::checked_pow(10, 15)?))
+                .expect("calculation does not overflow");
+        spec
+    }
 }
 
 impl Default for ChainSpec {
@@ -1363,6 +1373,7 @@ impl Config {
             "minimal" => Some(EthSpecId::Minimal),
             "mainnet" => Some(EthSpecId::Mainnet),
             "gnosis" => Some(EthSpecId::Gnosis),
+            "pulsechain" => Some(EthSpecId::PulseChain),
             _ => None,
         }
     }
