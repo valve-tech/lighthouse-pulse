@@ -44,7 +44,7 @@ fn get_base_reward_per_increment(
     total_active_balance: u128,
     spec: &ChainSpec,
 ) -> Result<u64, ArithError> {
-    spec.effective_balance_increment
-        .safe_mul(spec.base_reward_factor)?
-        .safe_div(total_active_balance.integer_sqrt() as u64)
+    Ok((spec.effective_balance_increment as u128)
+        .safe_mul(spec.base_reward_factor as u128)?
+        .safe_div(total_active_balance.integer_sqrt())? as u64)
 }

@@ -22,14 +22,14 @@ pub fn process_slashings<T: EthSpec>(
             && epoch.safe_add(T::EpochsPerSlashingsVector::to_u64().safe_div(2)?)?
                 == validator.withdrawable_epoch
         {
-            let increment = spec.effective_balance_increment;
+            let increment = spec.effective_balance_increment as u128;
             let effective_balance = validator.effective_balance as u128;
             let penalty_numerator = effective_balance
-                .safe_div(increment as u128)?
+                .safe_div(increment)?
                 .safe_mul(adjusted_total_slashing_balance)?;
             let penalty = penalty_numerator
                 .safe_div(total_balance)?
-                .safe_mul(increment as u128)?;
+                .safe_mul(increment)?;
 
             // Equivalent to `decrease_balance(state, index, penalty)`, but avoids borrowing `state`.
             let balance = balances
