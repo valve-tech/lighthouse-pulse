@@ -1,7 +1,7 @@
-# PulseChain Testnet-V3 config
+# PulseChain Testnet-V4 config
 
 # Extends the mainnet preset
-CONFIG_NAME: 'pulsechain-testnet-v3'
+CONFIG_NAME: 'pulsechain-testnet-v4'
 PRESET_BASE: 'pulsechain'
 
 # Transition
@@ -14,7 +14,7 @@ MIN_GENESIS_ACTIVE_VALIDATOR_COUNT: 4096
 # Jan 28 2023 00:00:00 UTC
 MIN_GENESIS_TIME: 1674864000
 # Genesis Fork Version
-GENESIS_FORK_VERSION: 0x00000942
+GENESIS_FORK_VERSION: 0x00000943
 # 300 seconds
 GENESIS_DELAY: 300
 
@@ -26,10 +26,10 @@ GENESIS_DELAY: 300
 #  - Temporarily set to max uint64 value: 2**64 - 1
 
 # Altair
-ALTAIR_FORK_VERSION: 0x00000943
+ALTAIR_FORK_VERSION: 0x00000944
 ALTAIR_FORK_EPOCH: 1
 # Merge
-BELLATRIX_FORK_VERSION: 0x00000944
+BELLATRIX_FORK_VERSION: 0x00000945
 BELLATRIX_FORK_EPOCH: 2
 
 # Time parameters
@@ -68,6 +68,6 @@ PROPOSER_SCORE_BOOST: 40
 # Deposit contract
 # ---------------------------------------------------------------
 # Ethereum PoW Mainnet
-DEPOSIT_CHAIN_ID: 942
-DEPOSIT_NETWORK_ID: 942
+DEPOSIT_CHAIN_ID: 943
+DEPOSIT_NETWORK_ID: 943
 DEPOSIT_CONTRACT_ADDRESS: 0x3693693693693693693693693693693693693693
