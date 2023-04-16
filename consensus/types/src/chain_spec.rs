@@ -860,6 +860,10 @@ impl ChainSpec {
     pub fn pulsechain() -> Self {
         let mut spec = Self::mainnet();
         spec.config_name = Some("pulsechain".to_string());
+        spec.base_reward_factor = 64000;
+        spec.effective_balance_increment =
+            option_wrapper(|| u64::checked_pow(2, 0)?.checked_mul(u64::checked_pow(10, 15)?))
+                .expect("calculation does not overflow");
         spec.max_effective_balance =
             option_wrapper(|| u64::checked_pow(2, 5)?.checked_mul(u64::checked_pow(10, 15)?))
                 .expect("calculation does not overflow");
