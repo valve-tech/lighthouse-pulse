@@ -31,6 +31,9 @@ ALTAIR_FORK_EPOCH: 1
 # Merge
 BELLATRIX_FORK_VERSION: 0x00000945
 BELLATRIX_FORK_EPOCH: 2
+# Capella
+CAPELLA_FORK_VERSION: 0x00000946
+CAPELLA_FORK_EPOCH: 4200 # Apr-28-2023 04:46:09 PM UTC
 
 # Time parameters
 # ---------------------------------------------------------------
