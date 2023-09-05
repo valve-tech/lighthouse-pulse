@@ -13,9 +13,9 @@ tokio = { version = "1.14.0", features = ["rt-multi-thread"] }
 bls = { path = "../../crypto/bls" }
 integer-sqrt = "0.1.5"
 itertools = "0.10.0"
-ethereum_ssz = { path = "../../../ethereum_ssz/ssz" }
-ethereum_ssz_derive= { path = "../../../ethereum_ssz/ssz_derive" }
-ssz_types = { path = "../../../ssz_types" }
+ethereum_ssz = { git = "https://gitlab.com/pulsechaincom/ethereum_ssz.git", tag = "v0.5.2" }
+ethereum_ssz_derive = { git = "https://gitlab.com/pulsechaincom/ethereum_ssz.git", tag = "v0.5.2" }
+ssz_types = { git = "https://gitlab.com/pulsechaincom/ssz_types.git", branch = "v0.5.3-RC" }
 merkle_proof = { path = "../merkle_proof" }
 safe_arith = { path = "../safe_arith" }
 tree_hash = "0.5.0"

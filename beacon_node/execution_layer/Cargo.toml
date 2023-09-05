@@ -22,8 +22,8 @@ environment = { path = "../../lighthouse/environment" }
 bytes = "1.1.0"
 task_executor = { path = "../../common/task_executor" }
 hex = "0.4.2"
-ethereum_ssz = { path = "../../../ethereum_ssz/ssz" }
-ssz_types = { path = "../../../ssz_types" }
+ethereum_ssz = { git = "https://gitlab.com/pulsechaincom/ethereum_ssz.git", tag = "v0.5.2" }
+ssz_types = { git = "https://gitlab.com/pulsechaincom/ssz_types.git", branch = "v0.5.3-RC" }
 eth2 = { path = "../../common/eth2" }
 state_processing = { path = "../../consensus/state_processing" }
 superstruct = "0.6.0"

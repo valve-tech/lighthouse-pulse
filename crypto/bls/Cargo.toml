@@ -5,7 +5,7 @@ authors = ["Paul Hauner <paul@paulhauner.com>"]
 edition = "2021"
 
 [dependencies]
-ethereum_ssz = { path = "../../../ethereum_ssz/ssz" }
+ethereum_ssz = { git = "https://gitlab.com/pulsechaincom/ethereum_ssz.git", tag = "v0.5.2" }
 tree_hash = "0.5.0"
 milagro_bls = { git = "https://github.com/sigp/milagro_bls", tag = "v1.4.2", optional = true }
 rand = "0.7.3"

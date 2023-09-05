@@ -9,7 +9,7 @@ edition = "2021"
 [dependencies]
 state_processing = { path = "../../consensus/state_processing" }
 types = { path = "../../consensus/types" }
-ethereum_ssz = { path = "../../../ethereum_ssz/ssz" }
+ethereum_ssz = { git = "https://gitlab.com/pulsechaincom/ethereum_ssz.git", tag = "v0.5.2" }
 beacon_chain = { path = "../../beacon_node/beacon_chain" }
 lazy_static = "1.4.0"
 tokio = { version = "1.14.0", features = ["rt-multi-thread"] }

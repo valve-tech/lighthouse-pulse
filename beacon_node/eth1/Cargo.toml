@@ -19,8 +19,8 @@ serde = { version = "1.0.116", features = ["derive"] }
 hex = "0.4.2"
 types = { path = "../../consensus/types"}
 merkle_proof = { path = "../../consensus/merkle_proof"}
-ethereum_ssz = { path = "../../../ethereum_ssz/ssz" }
-ethereum_ssz_derive= { path = "../../../ethereum_ssz/ssz_derive" }
+ethereum_ssz = { git = "https://gitlab.com/pulsechaincom/ethereum_ssz.git", tag = "v0.5.2" }
+ethereum_ssz_derive = { git = "https://gitlab.com/pulsechaincom/ethereum_ssz.git", tag = "v0.5.2" }
 tree_hash = "0.5.0"
 parking_lot = "0.12.0"
 slog = "2.5.2"

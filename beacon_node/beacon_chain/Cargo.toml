@@ -31,9 +31,9 @@ slog = { version = "2.5.2", features = ["max_level_trace"] }
 sloggers = { version = "2.1.1", features = ["json"] }
 slot_clock = { path = "../../common/slot_clock" }
 ethereum_hashing = "1.0.0-beta.2"
-ethereum_ssz = { path = "../../../ethereum_ssz/ssz" }
-ssz_types = { path = "../../../ssz_types" }
-ethereum_ssz_derive= { path = "../../../ethereum_ssz/ssz_derive" }
+ethereum_ssz = { git = "https://gitlab.com/pulsechaincom/ethereum_ssz.git", tag = "v0.5.2" }
+ssz_types = { git = "https://gitlab.com/pulsechaincom/ssz_types.git", branch = "v0.5.3-RC" }
+ethereum_ssz_derive = { git = "https://gitlab.com/pulsechaincom/ethereum_ssz.git", tag = "v0.5.2" }
 state_processing = { path = "../../consensus/state_processing" }
 tree_hash_derive = "0.5.0"
 tree_hash = "0.5.0"

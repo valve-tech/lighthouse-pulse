@@ -6,10 +6,10 @@ edition = "2021"
 
 [dependencies]
 ethereum-types = "0.14.1"
-ssz_types = { path = "../../../ssz_types" }
+ssz_types = { git = "https://gitlab.com/pulsechaincom/ssz_types.git", branch = "v0.5.3-RC" }
 ethereum_hashing = "1.0.0-beta.2"
-ethereum_ssz_derive= { path = "../../../ethereum_ssz/ssz_derive" }
-ethereum_ssz = { path = "../../../ethereum_ssz/ssz" }
+ethereum_ssz_derive = { git = "https://gitlab.com/pulsechaincom/ethereum_ssz.git", tag = "v0.5.2" }
+ethereum_ssz = { git = "https://gitlab.com/pulsechaincom/ethereum_ssz.git", tag = "v0.5.2" }
 tree_hash = "0.5.0"
 smallvec = "1.6.1"
 

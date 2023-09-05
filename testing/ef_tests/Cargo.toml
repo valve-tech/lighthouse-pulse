@@ -22,8 +22,8 @@ serde = "1.0.116"
 serde_derive = "1.0.116"
 serde_repr = "0.1.6"
 serde_yaml = "0.8.13"
-ethereum_ssz = { path = "../../../ethereum_ssz/ssz" }
-ethereum_ssz_derive= { path = "../../../ethereum_ssz/ssz_derive" }
+ethereum_ssz = { git = "https://gitlab.com/pulsechaincom/ethereum_ssz.git", tag = "v0.5.2" }
+ethereum_ssz_derive = { git = "https://gitlab.com/pulsechaincom/ethereum_ssz.git", tag = "v0.5.2" }
 tree_hash = "0.5.0"
 tree_hash_derive = "0.5.0"
 cached_tree_hash = { path = "../../consensus/cached_tree_hash" }
