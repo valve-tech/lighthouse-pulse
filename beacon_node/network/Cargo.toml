@@ -22,7 +22,7 @@ slot_clock = { path = "../../common/slot_clock" }
 slog = { version = "2.5.2", features = ["max_level_trace"] }
 hex = "0.4.2"
 ethereum_ssz = { git = "https://gitlab.com/pulsechaincom/ethereum_ssz.git", tag = "v0.5.2" }
-ssz_types = { git = "https://gitlab.com/pulsechaincom/ssz_types.git", branch = "v0.5.3-RC" }
+ssz_types = { git = "https://gitlab.com/pulsechaincom/ssz_types.git", tag = "v0.5.3" }
 futures = "0.3.7"
 error-chain = "0.12.4"
 tokio = { version = "1.14.0", features = ["full"] }

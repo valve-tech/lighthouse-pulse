@@ -6,7 +6,7 @@ edition = "2021"
 
 [dependencies]
 ethereum-types = "0.14.1"
-ssz_types = { git = "https://gitlab.com/pulsechaincom/ssz_types.git", branch = "v0.5.3-RC" }
+ssz_types = { git = "https://gitlab.com/pulsechaincom/ssz_types.git", tag = "v0.5.3" }
 ethereum_hashing = "1.0.0-beta.2"
 ethereum_ssz_derive = { git = "https://gitlab.com/pulsechaincom/ethereum_ssz.git", tag = "v0.5.2" }
 ethereum_ssz = { git = "https://gitlab.com/pulsechaincom/ethereum_ssz.git", tag = "v0.5.2" }
