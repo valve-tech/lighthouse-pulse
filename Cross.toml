@@ -1,5 +1,10 @@
+# Note: To enable working remote builds in gitlab pipelines, the Dockerfile.builder image is using the latest version of cross, straight from the git repo main branch.
+# This latest version defaults to the :main tag for the worker images below, which no longer have the clang-5.0 package available.
+# The images below are pinned to the latest cross release (0.2.5) in order to retain clang-5.0 lib compatibility with the upstream project.
 [target.x86_64-unknown-linux-gnu]
+image = "ghcr.io/cross-rs/x86_64-unknown-linux-gnu:0.2.5"
 pre-build = ["apt-get install -y cmake clang-5.0"]
 
 [target.aarch64-unknown-linux-gnu]
+image = "ghcr.io/cross-rs/aarch64-unknown-linux-gnu:0.2.5"
 pre-build = ["apt-get install -y cmake clang-5.0"]

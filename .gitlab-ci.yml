@@ -1,0 +1,107 @@
+stages:
+  - build
+  - release
+
+variables:
+  BUILDER_REPO: $CI_REGISTRY_IMAGE/builder
+  DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  DOCKER_PLATFORMS: linux/amd64,linux/arm64
+
+compile binaries:
+  stage: build
+  image: $BUILDER_REPO
+  rules:
+    # manual only for non-tagged commits, auto for tags
+    - if: $CI_COMMIT_TAG == null
+      when: manual
+    - if: $CI_COMMIT_TAG != null
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:24-dind
+  before_script:
+    # writing COMPILE_JOB_ID var to environment file, passed as artifact to downstream jobs
+    # see: https://docs.gitlab.com/ee/ci/variables/#pass-an-environment-variable-to-another-job
+    - echo COMPILE_JOB_ID=$CI_JOB_ID >> build.env
+  script:
+    - make build-release-tarballs
+  artifacts:
+    paths:
+      - bin/
+    reports:
+      # pass the generated env to downstream jobs
+      dotenv: build.env
+
+docker build:
+  stage: build
+  image: docker:cli
+  rules:
+    # manual only for non-tagged commits, auto for tags
+    - if: $CI_COMMIT_TAG == null
+      when: manual
+    - if: $CI_COMMIT_TAG != null
+  services:
+    - docker:24-dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker context create ctx
+    - docker buildx create --use ctx
+    - docker buildx build
+      --tag "$DOCKER_IMAGE_NAME"
+      --platform "$DOCKER_PLATFORMS"
+      --provenance=false
+      --pull --push .
+    - docker manifest inspect "$DOCKER_IMAGE_NAME"
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  script:
+    - echo "Releasing with artifacts from job $CI_PROJECT_URL/-/jobs/$COMPILE_JOB_ID"
+  rules:
+    - if: $CI_COMMIT_TAG != null
+      when: manual
+  variables:
+    ARTIFACT_URL: "$CI_PROJECT_URL/-/jobs/$COMPILE_JOB_ID/artifacts/raw/bin"
+  release:
+    name: "$CI_COMMIT_TAG"
+    description: |
+      **Docker Images**
+      - lighthouse multi-arch (amd64/arm64): \`$DOCKER_IMAGE_NAME\`
+
+      ## Release Notes
+      _Release created by pipeline (pending release notes)._
+    tag_name: "$CI_COMMIT_TAG"
+    assets:
+      links:
+        - name: "Linux ARM64 Executable - Portable"
+          link_type: package
+          url: "$ARTIFACT_URL/lighthouse-$CI_COMMIT_REF_NAME-aarch64-unknown-linux-gnu-portable.tar.gz"
+        - name: "Linux Intel/AMD64 Executable - Portable"
+          link_type: package
+          url: "$ARTIFACT_URL/lighthouse-$CI_COMMIT_REF_NAME-x86_64-unknown-linux-gnu-portable.tar.gz"
+        - name: "Linux ARM64 Executable - Optimized"
+          link_type: package
+          url: "$ARTIFACT_URL/lighthouse-$CI_COMMIT_REF_NAME-aarch64-unknown-linux-gnu.tar.gz"
+        - name: "Linux Intel/AMD64 Executable - Optimized"
+          link_type: package
+          url: "$ARTIFACT_URL/lighthouse-$CI_COMMIT_REF_NAME-x86_64-unknown-linux-gnu.tar.gz"
+
+docker tag latest:
+  stage: release
+  image: docker:cli
+  rules:
+    - if: $CI_COMMIT_TAG != null
+  # run automatically, but only if a release has been created
+  needs:
+    - release
+  services:
+    - docker:24-dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker buildx imagetools create -t "$CI_REGISTRY_IMAGE:latest" "$DOCKER_IMAGE_NAME"
+    # take a snapshot of the working builder image for building legacy versions in the future
+    - docker buildx imagetools create -t "$BUILDER_REPO:$CI_COMMIT_REF_NAME" "$BUILDER_REPO"
