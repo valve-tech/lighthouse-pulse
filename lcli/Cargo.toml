@@ -1,8 +1,8 @@
 [package]
 name = "lcli"
 description = "Lighthouse CLI (modeled after zcli)"
-version = "5.1.3"
-authors = ["Paul Hauner <paul@paulhauner.com>"]
+version = "2.5.0"
+authors = ["The PulseChain Team", "Paul Hauner <paul@paulhauner.com>"]
 edition = { workspace = true }
 
 [features]

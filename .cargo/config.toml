@@ -2,3 +2,5 @@
 # Set the number of arenas to 16 when using jemalloc.
 JEMALLOC_SYS_WITH_MALLOC_CONF = "abort_conf:true,narenas:16"
 
+[net]
+git-fetch-with-cli = true   # use the `git` executable for git operations
