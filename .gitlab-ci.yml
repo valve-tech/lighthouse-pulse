@@ -4,7 +4,7 @@ stages:
 
 variables:
   BUILDER_REPO: $CI_REGISTRY_IMAGE/builder
-  DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG}
   DOCKER_PLATFORMS: linux/amd64,linux/arm64
 
 compile binaries:
@@ -35,7 +35,7 @@ compile binaries:
 
 docker build:
   stage: build
-  image: docker:cli
+  image: docker:24-cli
   rules:
     # manual only for non-tagged commits, auto for tags
     - if: $CI_COMMIT_TAG == null
@@ -91,7 +91,7 @@ release:
 
 docker tag latest:
   stage: release
-  image: docker:cli
+  image: docker:24-cli
   rules:
     - if: $CI_COMMIT_TAG != null
   # run automatically, but only if a release has been created
