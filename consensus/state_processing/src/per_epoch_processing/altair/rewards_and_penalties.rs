@@ -1,5 +1,5 @@
 use super::ParticipationCache;
-use safe_arith::SafeArith;
+use safe_arith::{ArithError, SafeArith};
 use types::consts::altair::{
     PARTICIPATION_FLAG_WEIGHTS, TIMELY_HEAD_FLAG_INDEX, TIMELY_TARGET_FLAG_INDEX,
     WEIGHT_DENOMINATOR,
@@ -96,6 +96,30 @@ pub fn get_flag_index_deltas<T: EthSpec>(
     Ok(())
 }
 
+/// The inactivity penalty deducted from a single validator for one epoch.
+///
+/// Computed in `u128`. PulseChain raises `max_effective_balance` to 3.2e16 gwei
+/// (32M PLS), a millionfold over mainnet, so the spec's
+/// `effective_balance * inactivity_score` numerator overflows `u64` once the score
+/// passes ~576 — a threshold a sustained inactivity leak reaches, since the score
+/// grows by `inactivity_score_bias` every epoch with no forgiveness during a leak.
+/// A `u64` product there returns `ArithError` and aborts epoch processing, halting
+/// the node where the rest of the network (and the spec's arbitrary-precision math)
+/// expects a value. The attestation-reward path above is already widened to `u128`;
+/// this mirrors it for the penalty path.
+fn inactivity_penalty(
+    effective_balance: u64,
+    inactivity_score: u64,
+    inactivity_score_bias: u64,
+    inactivity_penalty_quotient: u64,
+) -> Result<u128, ArithError> {
+    let penalty_numerator =
+        (effective_balance as u128).safe_mul(inactivity_score as u128)?;
+    let penalty_denominator =
+        (inactivity_score_bias as u128).safe_mul(inactivity_penalty_quotient as u128)?;
+    penalty_numerator.safe_div(penalty_denominator)
+}
+
 /// Get the weight for a `flag_index` from the constant list of all weights.
 pub fn get_flag_weight(flag_index: usize) -> Result<u64, Error> {
     PARTICIPATION_FLAG_WEIGHTS
@@ -117,14 +141,13 @@ pub fn get_inactivity_penalty_deltas<T: EthSpec>(
         let mut delta = Delta::default();
 
         if !matching_target_indices.contains(index)? {
-            let penalty_numerator = state
-                .get_validator(index)?
-                .effective_balance
-                .safe_mul(state.get_inactivity_score(index)?)?;
-            let penalty_denominator = spec
-                .inactivity_score_bias
-                .safe_mul(spec.inactivity_penalty_quotient_for_state(state))?;
-            delta.penalize((penalty_numerator as u128).safe_div(penalty_denominator as u128)?)?;
+            let penalty = inactivity_penalty(
+                state.get_validator(index)?.effective_balance,
+                state.get_inactivity_score(index)?,
+                spec.inactivity_score_bias,
+                spec.inactivity_penalty_quotient_for_state(state),
+            )?;
+            delta.penalize(penalty)?;
         }
         deltas
             .get_mut(index)
@@ -132,4 +155,52 @@ pub fn get_inactivity_penalty_deltas<T: EthSpec>(
             .combine(delta)?;
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::inactivity_penalty;
+    use types::ChainSpec;
+
+    /// On PulseChain a max-balance validator whose inactivity score climbs during a
+    /// leak overflows the old `u64` `effective_balance * inactivity_score` numerator.
+    /// The widened `u128` computation must return the spec value instead of erroring.
+    #[test]
+    fn inactivity_penalty_no_overflow_at_pulsechain_max() {
+        let spec = ChainSpec::pulsechain();
+        let effective_balance = spec.max_effective_balance; // 32M PLS, the PulseChain cap.
+        let score = 5_000u64; // Well past the ~576 u64-overflow threshold for this balance.
+        let quotient = spec.inactivity_penalty_quotient;
+
+        // The pre-fix `u64` product overflowed; that was the halt.
+        assert!(
+            effective_balance.checked_mul(score).is_none(),
+            "test premise: the u64 numerator must overflow at these values"
+        );
+
+        let penalty =
+            inactivity_penalty(effective_balance, score, spec.inactivity_score_bias, quotient)
+                .expect("u128 numerator does not overflow");
+
+        let expected = (effective_balance as u128 * score as u128)
+            / (spec.inactivity_score_bias as u128 * quotient as u128);
+        assert_eq!(penalty, expected);
+    }
+
+    /// Mainnet-sized inputs are unaffected: the widening changes nothing where the
+    /// `u64` product already fit.
+    #[test]
+    fn inactivity_penalty_matches_narrow_path_for_mainnet_values() {
+        let spec = ChainSpec::mainnet();
+        let effective_balance = spec.max_effective_balance; // 32 ETH.
+        let score = 211u64;
+        let quotient = spec.inactivity_penalty_quotient;
+
+        let narrow = (effective_balance * score) as u128
+            / (spec.inactivity_score_bias as u128 * quotient as u128);
+        let wide =
+            inactivity_penalty(effective_balance, score, spec.inactivity_score_bias, quotient)
+                .unwrap();
+        assert_eq!(wide, narrow);
+    }
 }
