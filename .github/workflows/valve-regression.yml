@@ -1,0 +1,36 @@
+name: valve-regression
+
+# Runs the valve PulseChain-magnitude regression guards on every push/PR to master.
+# The upstream test-suite.yml is a large self-hosted matrix that does not run on this
+# fork; this is a focused gate that exercises the arithmetic-overflow fixes (inactivity
+# penalty widen, reward-burn wrap, slashing-product wrap, slashings-accumulation wrap)
+# and the max-scale epoch-processing harness. Pinned to Rust 1.81 — the fork does not
+# build on newer toolchains.
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  state-processing:
+    name: state_processing regression tests (Rust 1.81)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build deps
+        run: sudo apt-get update && sudo apt-get install -y protobuf-compiler cmake clang libclang-dev
+      - name: Install Rust 1.81.0
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.81.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: PulseChain-magnitude regression tests
+        # Debug build so a raw-arithmetic regression panics instead of silently
+        # wrapping. Covers the per-site unit tests + the full-pipeline harness.
+        run: cargo test -p state_processing --lib
